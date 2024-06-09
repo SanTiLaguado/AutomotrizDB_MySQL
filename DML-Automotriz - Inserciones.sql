@@ -45,25 +45,20 @@ INSERT INTO contacto (nombre, apellido, email) VALUES
 ('Marta', 'López', 'marta.lopez@example.com'), 
 ('Pedro', 'Sánchez', 'pedro.sanchez@example.com');
 
-INSERT INTO pieza (nombre, descripcion, inventario) VALUES 
-('Filtro de aceite', 'Filtro de aceite para motor', 100), 
-('Bujía', 'Bujía para encendido', 200), 
-('Pastilla de freno', 'Pastilla de freno para autos', 150);
-
-INSERT INTO ubicacion (nombre) VALUES 
-('Almacén Central'), 
-('Sucursal Norte'), 
-('Sucursal Sur');
+INSERT INTO ubicacion (nombre , direccion) VALUES 
+('Almacén Central', 'Calle 15 Carrera Central A'), 
+('Sucursal Norte', 'Calle 75 Carretera NORTE'), 
+('Sucursal Sur', 'Calle 23 Carrera 12 Sur');
 
 INSERT INTO inventario (cantidad, ubicacion_id) VALUES 
 (100, 1), 
 (50, 2), 
 (200, 3);
 
-INSERT INTO pieza_inventario (inventario_id, pieza_id) VALUES 
-(1, 1), 
-(2, 2), 
-(3, 3);
+INSERT INTO pieza (nombre, descripcion, inventario_id) VALUES 
+('Filtro de aceite', 'Filtro de aceite para motor', 1), 
+('Bujía', 'Bujía para encendido', 2), 
+('Pastilla de freno', 'Pastilla de freno para autos', 3);
 
 INSERT INTO direccion_cliente (cliente_id, pais_id, region_id, ciudad_id, detalle) VALUES 
 (1, 1, 1, 1, 'Calle Falsa 123'), 

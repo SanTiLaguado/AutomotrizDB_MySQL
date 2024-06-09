@@ -62,17 +62,10 @@ CREATE TABLE contacto (
     CONSTRAINT PK_Contacto_Id PRIMARY KEY(id)
 );
 
-CREATE TABLE pieza (
-    id INT AUTO_INCREMENT,
-    nombre VARCHAR(50) NOT NULL,
-    descripcion TEXT NOT NULL,
-    inventario INT DEFAULT 0 NOT NULL,
-    CONSTRAINT PK_Pieza_Id PRIMARY KEY (id)
-);
-
 CREATE TABLE ubicacion (
 	id INT AUTO_INCREMENT,
-	nombre VARCHAR(50),
+	nombre VARCHAR(50) NOT NULL,
+    direccion VARCHAR(266) NOT NULL,
 	CONSTRAINT PK_Ubicacion_Id PRIMARY KEY(id)
 );
 
@@ -84,12 +77,13 @@ CREATE TABLE inventario (
     CONSTRAINT FK_Ubicacion_Inventario_Id FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(id)
 );
 
-CREATE TABLE pieza_inventario(
-	inventario_id INT,
-	pieza_id INT,
-	CONSTRAINT PK_PiezaInventario_Id PRIMARY KEY(inventario_id, pieza_id),
-	CONSTRAINT FK_Inventario_PiezaInventario_Id FOREIGN KEY (inventario_id) REFERENCES inventario(id),
-    CONSTRAINT FK_Pieza_PiezaInventario_Id FOREIGN KEY (pieza_id) REFERENCES pieza(id)
+CREATE TABLE pieza (
+    id INT AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion TEXT NOT NULL,
+    inventario_id INT NOT NULL,
+    CONSTRAINT PK_Pieza_Id PRIMARY KEY (id),
+    CONSTRAINT FK_pieza_Inventario_Id FOREIGN KEY (inventario_id) REFERENCES inventario(id)
 );
 
 CREATE TABLE direccion_cliente (
@@ -281,13 +275,10 @@ CREATE TABLE factura (
     id INT AUTO_INCREMENT,
     fecha DATE NOT NULL,
     cliente_id INT NOT NULL,
-    empleado_id INT NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
     CONSTRAINT PK_Factura_Id PRIMARY KEY(id),
     CONSTRAINT FK_Cliente_Factura_Id FOREIGN KEY (cliente_id) REFERENCES cliente(id),
-    CONSTRAINT FK_Empleado_Factura_Id FOREIGN KEY (empleado_id) REFERENCES empleado(id),
-    INDEX (cliente_id),
-    INDEX (empleado_id)
+    INDEX (cliente_id)
 );
 
 CREATE TABLE pago (
