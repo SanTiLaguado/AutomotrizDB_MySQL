@@ -23,7 +23,8 @@ INSERT INTO tipo_telefono (tipo) VALUES
 INSERT INTO cliente (nombre, apellido, email) VALUES 
 ('Juan', 'Pérez', 'juan.perez@example.com'), 
 ('Ana', 'Gómez', 'ana.gomez@example.com'), 
-('Luis', 'Martínez', 'luis.martinez@example.com');
+('Luis', 'Martínez', 'luis.martinez@example.com'),
+('Maria Fernanda', 'Araque', 'mafe.araque@example.com');
 
 INSERT INTO marca (nombre) VALUES 
 ('Toyota'), 
@@ -150,6 +151,7 @@ INSERT INTO detalle_factura (factura_id, reparacion_id, cantidad, precio_unitari
 (1, 1, 1, 200.00), 
 (2, 2, 1, 300.00), 
 (3, 3, 1, 400.00);
+
 
 
 
