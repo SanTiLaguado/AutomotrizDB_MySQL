@@ -160,6 +160,7 @@ CREATE TABLE reparacion (
     fecha DATE NOT NULL,
     empleado_id INT NOT NULL,
     vehiculo_id INT NOT NULL,
+    duracion INT NOT NULL,
     costo_total DECIMAL(10, 2) NOT NULL,
     descripcion TEXT NOT NULL,
     CONSTRAINT PK_Reparacion_Id PRIMARY KEY (id),

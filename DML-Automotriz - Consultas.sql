@@ -190,18 +190,61 @@ SELECT
 FROM cliente c
 WHERE c.id NOT IN (
 	SELECT
-		v.cliente_id
-	FROM vehiculo v
-    LEFT JOIN
-		reparacion r ON v.id = r.vehiculo_id
-	WHERE 
-		r.fecha >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
-);
+		ci.cliente_id
+	FROM cita ci WHERE ci.fecha_hora >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    );
 
 #17. Obtener las ganancias totales del taller en un período específico
 
-SELECT SUM(total) AS TOTAL_GANANCIAS
-FROM pago WHERE
+SELECT SUM(total) AS TOTAL_GANANCIAS FROM pago;
+
+#18. Listar los empleados y el total de horas trabajadas en reparaciones en un
+#     período específico (asumiendo que se registra la duración de cada reparación)
+
+SELECT 
+	e.id AS ID_EMPLEADO,
+    CONCAT(e.nombre, ' ', e.apellido) AS NOMBRE,
+	r.duracion AS CANTIDAD_HORAS
+FROM reparacion r
+INNER JOIN 
+	empleado e ON r.empleado_id = e.id
+WHERE fecha BETWEEN '2023-01-01' AND '2023-03-31'
+GROUP BY r.id
+ORDER BY CANTIDAD_HORAS DESC;
+
+# 19. Obtener el listado de servicios prestados por cada empleado en un período
+#     específico
+
+SELECT 
+	CONCAT(e.nombre, ' ', e.apellido) AS EMPLEADO,
+	s.nombre AS SERVICIOS
+FROM 
+	servicio s
+INNER JOIN 
+	reparacion_servicio rs ON s.id = rs.servicio_id
+INNER JOIN
+	reparacion r ON rs.reparacion_id = r.id
+INNER JOIN
+	empleado e ON r.empleado_id = e.id
+WHERE
+	r.fecha BETWEEN '2023-01-01' AND '2023-03-31'
+ORDER BY EMPLEADO DESC;
+
+
+## SUBCONSULTAS
+
+# 1. Obtener el cliente que ha gastado más en reparaciones durante el último año.
+
+
+
+
+
+
+
+
+
+
+
 
 
 

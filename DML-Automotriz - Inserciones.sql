@@ -86,10 +86,10 @@ INSERT INTO telefono_empleado (empleado_id, tipo_id, numero) VALUES
 (2, 2, '555-8765'), 
 (3, 3, '555-2345');
 
-INSERT INTO reparacion (fecha, empleado_id, vehiculo_id, costo_total, descripcion) VALUES 
-('2023-01-15', 1, 1, 200.00, 'Revisión general'), 
-('2023-02-20', 2, 2, 300.00, 'Cambio de frenos'), 
-('2023-03-10', 3, 3, 150.00, 'Cambio de aceite');
+INSERT INTO reparacion (fecha, empleado_id, vehiculo_id, duracion, costo_total, descripcion) VALUES 
+('2023-01-15', 1, 1, 3, 200.00, 'Revisión general'), 
+('2023-02-20', 2, 2, 4,300.00, 'Cambio de frenos'), 
+('2023-03-10', 3, 3, 2,150.00, 'Cambio de aceite');
 
 INSERT INTO reparacion_servicio (reparacion_id, servicio_id) VALUES 
 (1, 1), 
