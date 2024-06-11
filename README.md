@@ -28,7 +28,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 2. **Calcular el costo total de todas las reparaciones realizadas por un empleado específico en un período de tiempo**
 
   ```mysql
-  	-> SELECT
+       ->	SELECT
       ->    empleado_id AS EMPLEADO,
       ->    SUM(costo_total) AS COSTO_TOTAL_DE_REPARACIONES
       -> FROM reparacion
@@ -47,7 +47,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 3. **Listar todos los clientes y los vehículos que poseen**
 
    ```mysql
-   	-> SELECT
+       ->	SELECT
        ->  concat(c.nombre, ' ', c.apellido) AS CLIENTE,
        ->     v.modelo AS VEHICULO,
        ->     v.placa AS PLACA
@@ -70,7 +70,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 4. **Obtener la cantidad de piezas en inventario para cada pieza**
 
    ```mysql
-   	-> SELECT
+       ->	SELECT
        ->  p.nombre AS PIEZA,
        ->     i.stock_actual AS CANTIDAD
        -> FROM
@@ -91,7 +91,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 5. **Obtener las citas programadas para un día específico**
 
    ```mysql
-   	-> SELECT * FROM cita c WHERE DATE(fecha_hora) = '2023-01-10';
+       ->	SELECT * FROM cita c WHERE DATE(fecha_hora) = '2023-01-10';
    +----+---------------------+------------+-------------+
    | id | fecha_hora          | cliente_id | vehiculo_id |
    +----+---------------------+------------+-------------+
