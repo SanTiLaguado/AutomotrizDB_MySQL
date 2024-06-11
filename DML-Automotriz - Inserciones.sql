@@ -74,10 +74,11 @@ INSERT INTO telefono_cliente (cliente_id, tipo_id, numero) VALUES
 (2, 2, '316-5678'), 
 (3, 1, '555-9101');
 
-INSERT INTO vehiculo (placa, marca_id, modelo, año_fabricacion, cliente_id) VALUES 
-('ABC123', 1, 'Corolla', 2020, 1), 
-('DEF456', 2, 'Civic', 2019, 2), 
-('GHI789', 3, 'Focus', 2018, 3);
+INSERT INTO vehiculo (placa, marca_id, modelo, año_fabricacion, kilometraje, cliente_id) VALUES 
+('ABC123', 1, 'Corolla', '2020', 39841, 1), 
+('DEF456', 2, 'Civic', '2019', 68432, 2), 
+('GHI789', 3, 'Focus', '2018', 98340, 3),
+('OWJ20G', 2, 'CB-190', '2024', 5300, 4);
 
 INSERT INTO empleado (nombre, apellido, cargo_id, email) VALUES 
 ('Pedro', 'Martínez', 1, 'pedro.martinez@example.com'), 
@@ -128,7 +129,8 @@ INSERT INTO reparacion_piezas (reparacion_id, pieza_id, cantidad) VALUES
 
 INSERT INTO cita (fecha_hora, cliente_id, vehiculo_id) VALUES 
 ('2023-01-10 10:00:00', 1, 1), 
-('2023-02-15 11:00:00', 2, 2), 
+('2023-02-15 11:00:00', 2, 2),
+('2023-02-25 10:00:00', 1, 1), 
 ('2023-03-20 12:00:00', 3, 3),
 ('2024-05-20 10:00:00', 1, 1),
 ('2024-05-21 11:00:00', 2, 2);
@@ -137,9 +139,10 @@ INSERT INTO cita (fecha_hora, cliente_id, vehiculo_id) VALUES
 INSERT INTO cita_servicio (cita_id, servicio_id) VALUES 
 (1, 1), 
 (2, 2), 
-(3, 3),
-(4, 5),
-(5, 6);
+(3, 2),
+(4, 3),
+(5, 5),
+(6, 6);
 
 
 INSERT INTO orden_compra (fecha, proveedor_id, empleado_id, total) VALUES 

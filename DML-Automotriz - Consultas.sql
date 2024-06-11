@@ -318,5 +318,234 @@ WHERE i.stock_actual <= (
 );
 
 
+## PROCEDIMIENTOS ALMACENADOS
 
 
+#1. Crear un procedimiento almacenado para insertar una nueva reparación.
+
+DELIMITER //
+
+CREATE PROCEDURE insertar_reparacion (
+	IN fecha DATE,
+    IN empleado_id INT,
+    IN vehiculo_id INT,
+    IN duracion INT,
+    IN costo_total DECIMAL(10, 2),
+    IN descripcion TEXT
+)
+BEGIN
+INSERT INTO reparacion(fecha, empleado_id, vehiculo_id, duracion, costo_total, descripcion)
+VALUES (fecha, empleado_id, vehiculo_id, duracion, costo_total, descripcion);
+
+END //
+
+DELIMITER ;
+
+CALL insertar_reparacion('2024-06-10', 2, 2, 4,300.00, 'Cambio de frenos');
+
+#2. Crear un procedimiento almacenado para actualizar el inventario de una pieza.
+
+
+DELIMITER //
+
+CREATE PROCEDURE actualizar_inventario_pieza (
+    IN pieza_id INT,
+    IN nueva_cantidad INT
+)
+BEGIN
+    UPDATE inventario
+    SET stock_actual = nueva_cantidad
+    WHERE id = (
+        SELECT inventario_id
+        FROM pieza
+        WHERE id = pieza_id
+    );
+END //
+
+DELIMITER ;
+
+CALL actualizar_inventario_pieza(1, 165);
+
+#3.Crear un procedimiento almacenado para eliminar una cita
+
+
+DELIMITER //
+
+CREATE PROCEDURE eliminar_cita (
+	IN cita_id INT
+)
+BEGIN
+	DELETE FROM cita WHERE id = cita_id;
+END//
+
+DELIMITER ;
+
+CALL eliminar_cita(1);
+
+#4. Crear un procedimiento almacenado para generar una factura
+
+DELIMITER //
+
+CREATE PROCEDURE generar_factura (
+	IN fecha DATE,
+    IN cliente_id INT,
+    IN total DECIMAL(10, 2)
+)
+BEGIN
+	INSERT INTO factura (fecha, cliente_id, total)
+    VALUES (fecha, cliente_id, total);
+END//
+
+DELIMITER ;
+
+CALL generar_factura('2024-05-10', 2, 400.00)
+
+#5. Crear un procedimiento almacenado para obtener el historial de reparaciones de un vehículo
+
+
+DELIMITER //
+
+CREATE PROCEDURE ver_historial_reparaciones (
+	IN id_vehiculo INT
+)
+BEGIN
+	SELECT 
+		fecha AS FECHA,
+		duracion AS DURACION,
+		costo_total AS TOTAL,
+		descripcion AS DESCRIPCION
+	FROM reparacion
+    WHERE vehiculo_id = id_vehiculo;
+END//
+
+DELIMITER ;
+
+CALL ver_historial_reparaciones(1)
+
+
+#6. Crear un procedimiento almacenado para calcular el costo total de
+#    reparaciones de un cliente en un período
+
+DELIMITER //
+
+CREATE PROCEDURE costo_repar_cliente (
+	IN id_cliente INT
+)
+BEGIN
+	SELECT
+		CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
+		SUM(costo_total) AS TOTAL
+	FROM reparacion r
+    INNER JOIN
+		vehiculo v ON r.vehiculo_id = v.id
+	INNER JOIN
+		cliente c ON v.cliente_id = c.id
+	WHERE c.id = id_cliente 
+    AND fecha BETWEEN '2023-01-01' AND '2023-03-31'
+    GROUP BY c.id;
+END//
+
+DELIMITER ;
+
+CALL costo_repar_cliente(1);
+
+# 7. Crear un procedimiento almacenado para obtener la lista de vehículos que
+#     requieren mantenimiento basado en el kilometraje.
+
+DELIMITER //
+
+CREATE PROCEDURE vehic_mant_kms ()
+BEGIN
+	SELECT
+    v.id AS ID,
+    v.modelo AS MODELO,
+    v.año_fabricacion AS AÑO,
+    v.kilometraje AS KMS,
+    (v.kilometraje / (YEAR(CURDATE()) - v.año_fabricacion)) AS KMS_POR_AÑO
+	FROM vehiculo v
+	WHERE 
+		(v.kilometraje / (YEAR(CURDATE()) - v.año_fabricacion)) > 10000;
+END//
+
+DELIMITER ;
+
+CALL vehic_mant_kms();
+
+
+#8. Crear un procedimiento almacenado para insertar una nueva orden de compra
+
+
+DELIMITER //
+
+CREATE PROCEDURE insertar_ordencompra (
+	IN fecha DATE,
+    IN proveedor_id INT,
+    IN empleado_id INT,
+    IN total DECIMAL(10,2)
+)
+BEGIN
+	INSERT INTO orden_compra (fecha, proveedor_id, empleado_id, total)
+    VALUES (fecha, proveedor_id, empleado_id, total);
+END//
+
+DELIMITER ;
+
+CALL insertar_ordencompra('2023-01-01', 1, 1, 500.00);
+
+# 9. Crear un procedimiento almacenado para actualizar los datos de un cliente
+
+DELIMITER //
+
+CREATE PROCEDURE actualizar_cliente (
+	IN id_cliente INT,
+	IN nuevonombre VARCHAR(50),
+    IN nuevoapellido VARCHAR(50),
+    IN nuevoemail VARCHAR(255)
+)
+BEGIN
+	UPDATE cliente
+    SET nombre = nuevonombre,
+		apellido = nuevoapellido,
+		email = nuevoemail
+    WHERE id = id_cliente;
+END//
+
+DELIMITER ;
+
+CALL actualizar_cliente(1, 'Juanito', 'Pérea', 'juanito.perea@example.com')
+
+
+# 10. Crear un procedimiento almacenado para obtener los servicios más solicitados
+#  en un período
+
+DELIMITER //
+
+CREATE PROCEDURE ver_topservicios (
+	IN fecha1 DATE,
+    IN fecha2 DATE
+)
+BEGIN
+	SELECT 
+		s.nombre AS SERVICIO,
+		COUNT(cs.servicio_id) AS CANTIDAD
+	FROM servicio s
+	INNER JOIN
+		cita_servicio cs ON s.id = cs.servicio_id
+	INNER JOIN
+		cita c ON cs.cita_id = c.id
+	WHERE c.fecha_hora BETWEEN fecha1 AND fecha2
+	GROUP BY s.nombre
+	ORDER BY CANTIDAD DESC;
+END//
+
+DELIMITER ;
+
+
+CALL ver_topservicios('2023-01-01', '2023-03-31');
+
+
+
+
+
+
+        

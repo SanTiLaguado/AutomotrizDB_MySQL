@@ -30,7 +30,7 @@ CREATE TABLE cliente (
     id INT AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
-    email VARCHAR(254) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     CONSTRAINT PK_Cliente_Id PRIMARY KEY(id)
 );
 
@@ -124,6 +124,7 @@ CREATE TABLE vehiculo (
     marca_id INT NOT NULL,
     modelo VARCHAR(50) NOT NULL,
     año_fabricacion YEAR NOT NULL,
+    kilometraje INT NOT NULL,
     cliente_id INT NOT NULL,
     CONSTRAINT PK_Vehiculo_Id PRIMARY KEY (id),
     CONSTRAINT FK_Marca_Vehiculo_Id FOREIGN KEY (marca_id) REFERENCES marca(id),
