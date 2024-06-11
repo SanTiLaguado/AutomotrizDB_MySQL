@@ -9,7 +9,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 1. **Obtener el historial de reparaciones de un vehículo específico**
 
    ```mysql
-    ->	SELECT
+       ->	SELECT
        ->     fecha AS FECHA,
        ->     duracion AS DURACION,
        ->     costo_total AS TOTAL,
@@ -25,7 +25,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se seleccionan las columnas `fecha`, `duracion`, `costo_total`,  y `descripcion` de la tabla `reparacion` donde el `vehiculo_id` es 1. Esto proporciona el historial completo de reparaciones para ese vehículo específico.
    
-
 2. **Calcular el costo total de todas las reparaciones realizadas por un empleado específico en un período de tiempo**
 
   ```mysql
@@ -43,7 +42,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
   ```
 
   Se selecciona el `empleado_id` y se calcula la suma de `costo_total` de las reparaciones realizadas por el empleado con id 1 dentro del rango de fechas especificado.
-  
+
 
 3. **Listar todos los clientes y los vehículos que poseen**
 
@@ -89,7 +88,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se realiza un `INNER JOIN` entre las tablas `pieza` e `inventario` para obtener el nombre de la pieza y su cantidad actual en inventario.
    
-
 5. **Obtener las citas programadas para un día específico**
 
    ```mysql
@@ -117,7 +115,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se seleccionan todas las facturas emitidas al cliente específico (`cliente_id = 2`) en una fecha determinada (17 de febrero de 2023), utilizando la función `DATE` para comparar la fecha.
    
-
 7. **Listar todas las órdenes de compra y sus detalles**
 
    ```mysql
@@ -142,7 +139,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se realiza un `INNER JOIN` entre las tablas `orden_compra` y `orden_detalle` para obtener todos los detalles de cada orden de compra.
    
-
 8. **Obtener el costo total de piezas utilizadas en una reparación específica**
 
    ```mysql
@@ -173,7 +169,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se seleccionan los detalles de las piezas utilizadas en la reparación con `reparacion_id = 3` y se calcula el costo total sumando el precio unitario multiplicado por la cantidad de cada pieza.
    
-
 9. **Obtener el inventario de piezas que necesitan ser reabastecidas (cantidad menor que un umbral)**
 
   ```mysql
@@ -195,7 +190,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
   ```
 
   Se combinan las tablas `pieza` e `inventario` para seleccionar las piezas cuyo stock actual es menor o igual a 50. 
-  
+
 
 10. **Obtener la lista de servicios más solicitados en un período específico**
 
@@ -222,7 +217,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se cuenta la cantidad de veces que cada servicio fue solicitado en citas dentro del período especificado y se ordena la lista de servicios por cantidad de solicitudes en orden descendente. En este caso, cada servicio se ha solicitado 1 vez en el periodo seleccionado
     
-
 11. **Obtener el costo total de reparaciones para cada cliente en un período específico**
 
     ```mysql
@@ -248,7 +242,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se suman los costos totales de reparaciones asociadas a los vehículos de cada cliente dentro del período especificado. Esto proporciona el gasto total en reparaciones por cliente.
     
-
 12. **Listar los empleados con mayor cantidad de reparaciones realizadas en un período específico**
 
     ```mysql
@@ -273,7 +266,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se cuenta el número de reparaciones realizadas por cada empleado dentro del período especificado y se ordena la lista de empleados por cantidad de reparaciones en orden descendente.
     
-
 13. **Obtener las piezas más utilizadas en reparaciones durante un período específico**
 
     ```mysql
@@ -305,7 +297,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se cuenta cuántas veces cada pieza fue utilizada en reparaciones dentro del período especificado. Igualmente en este caso cada pieza se ha utilizado 1 vez en el periodo seleccionado.
     
-
 14. **Calcular el promedio de costo de reparaciones por vehículo**
 
     ```mysql
@@ -328,7 +319,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Utilizando la función `AVG`  se calcula el costo promedio de las reparaciones asociadas a cada modelo de vehículo que se ha reparado en el taller.
     
-
 15. **Obtener el inventario de piezas por proveedor**
 
     ```mysql
@@ -355,7 +345,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se combinan las tablas `proveedores` ,  `piezas`, `precios`  e `inventario` para obtener la cantidad de piezas en inventario suministradas por cada proveedor.
     
-
 16. **Listar los clientes que no han realizado reparaciones en el último año**
 
     ```mysql
@@ -377,7 +366,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se seleccionan los clientes que no tienen citas registradas en el último año, ya que si no han agendado una cita, por consiguiente no han realizado ninguna reparación.
     
-
 17. **Obtener las ganancias totales del taller en un período específico**
 
     ```mysql
@@ -393,7 +381,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se suma el total de pagos hechos en el periodo seleccionado, para sacar el TOTAL de ganancias.
     
-
 18. **Listar los empleados y el total de horas trabajadas en reparaciones en un período específico (asumiendo que se registra la duración de cada reparación)**
 
     ```mysql
@@ -418,7 +405,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
     Se suman las duraciones de las reparaciones realizadas por cada empleado dentro del período especificado y se ordenan de mayor a menor.
     
-
 19. **Obtener el listado de servicios prestados por cada empleado en un período específico**
 
     ```mysql
@@ -456,7 +442,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 1. **Obtener el cliente que ha gastado más en reparaciones durante el último año.**
 
    ```mysql
-   SELECT
+   	->SELECT
        ->     c.id AS ID_CLIENTE,
        ->     CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
        ->     (SELECT SUM(r.costo_total)
@@ -526,7 +512,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Se utiliza la función `MAX` para retornar el precio mas alto, y se relaciona con el proveedor, para saber cual es el proveedor con piezas mas caras
    
-
 4. **Listar las reparaciones que no utilizaron piezas específicas durante el último año**
 
   ```mysql
@@ -546,7 +531,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
   ```
 
   Se seleccionan todas las reparaciones que no incluyen la pieza con id 1 y 3, en el intervalo de 1 año.
-  
+
 5. **Obtener las piezas que están en inventario por debajo del 10% del stock inicial**
 
    ```mysql
@@ -604,7 +589,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Este procedimiento toma como parámetro los datos de una nueva reparación y los ingresa en la tabla.
    
-
 2. **Crear un procedimiento almacenado para actualizar el inventario de una pieza.**
 
    ```mysql
@@ -744,7 +728,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
   ```
 
   Este procedimiento toma como parámetro un `id_cliente` y hace la consulta para sumar `costo_total` de todos los registros de reparaciones que tenga en el periodo de tiempo.
-  
+
 
 7. **Crear un procedimiento almacenado para obtener la lista de vehículos que requieren mantenimiento basado en el kilometraje.**
 
@@ -803,7 +787,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Este procedimiento toma como parámetro los datos para insertar una nueva orden de compra.
    
-
 9. **Crear un procedimiento almacenado para actualizar los datos de un cliente**
 
    ```
@@ -830,7 +813,6 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    Este procedimiento toma como parámetro el `id_cliente` a actualizar, y los nuevos datos.
    
-
 10. **Crear un procedimiento almacenado para obtener los servicios más solicitados en un período**
 
     ```mysql
