@@ -9,12 +9,12 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 1. **Obtener el historial de reparaciones de un vehículo específico**
 
    ```mysql
-       ->	SELECT
-       ->     fecha AS FECHA,
-       ->     duracion AS DURACION,
-       ->     costo_total AS TOTAL,
-       ->     descripcion AS DESCRIPCION
-       ->  FROM reparacion WHERE vehiculo_id = 1;
+        ->	SELECT
+        ->     fecha AS FECHA,
+        ->     duracion AS DURACION,
+        ->     costo_total AS TOTAL,
+        ->     descripcion AS DESCRIPCION
+        ->  FROM reparacion WHERE vehiculo_id = 1;
    +------------+----------+--------+----------------------------+
    | FECHA      | DURACION | TOTAL  | DESCRIPCION                |
    +------------+----------+--------+----------------------------+
@@ -28,12 +28,12 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 2. **Calcular el costo total de todas las reparaciones realizadas por un empleado específico en un período de tiempo**
 
   ```mysql
-       ->	SELECT
-      ->    empleado_id AS EMPLEADO,
-      ->    SUM(costo_total) AS COSTO_TOTAL_DE_REPARACIONES
-      -> FROM reparacion
-      -> WHERE empleado_id = 1
-      -> AND fecha BETWEEN '2023-01-01' AND '2023-03-31';
+        ->	SELECT
+        ->    empleado_id AS EMPLEADO,
+        ->    SUM(costo_total) AS COSTO_TOTAL_DE_REPARACIONES
+        -> FROM reparacion
+        -> WHERE empleado_id = 1
+        -> AND fecha BETWEEN '2023-01-01' AND '2023-03-31';
   +----------+-----------------------------+
   | EMPLEADO | COSTO_TOTAL_DE_REPARACIONES |
   +----------+-----------------------------+
@@ -47,14 +47,14 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 3. **Listar todos los clientes y los vehículos que poseen**
 
    ```mysql
-       ->	SELECT
-       ->  concat(c.nombre, ' ', c.apellido) AS CLIENTE,
-       ->     v.modelo AS VEHICULO,
-       ->     v.placa AS PLACA
-       -> FROM
-       ->  cliente c
-       -> INNER JOIN
-       ->  vehiculo v ON c.id = v.cliente_id;
+        ->	SELECT
+        ->  concat(c.nombre, ' ', c.apellido) AS CLIENTE,
+        ->     v.modelo AS VEHICULO,
+        ->     v.placa AS PLACA
+        -> FROM
+        ->  cliente c
+        -> INNER JOIN
+        ->  vehiculo v ON c.id = v.cliente_id;
    +----------------+----------+--------+
    | CLIENTE        | VEHICULO | PLACA  |
    +----------------+----------+--------+
@@ -70,13 +70,13 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 4. **Obtener la cantidad de piezas en inventario para cada pieza**
 
    ```mysql
-       ->	SELECT
-       ->  p.nombre AS PIEZA,
-       ->     i.stock_actual AS CANTIDAD
-       -> FROM
-       ->  pieza p
-       -> INNER JOIN
-       ->  inventario i ON p.inventario_id = i.id;
+        ->	SELECT
+        ->  p.nombre AS PIEZA,
+        ->     i.stock_actual AS CANTIDAD
+        -> FROM
+        ->  pieza p
+        -> INNER JOIN
+        ->  inventario i ON p.inventario_id = i.id;
    +-------------------+----------+
    | PIEZA             | CANTIDAD |
    +-------------------+----------+
@@ -91,7 +91,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 5. **Obtener las citas programadas para un día específico**
 
    ```mysql
-       ->	SELECT * FROM cita c WHERE DATE(fecha_hora) = '2023-01-10';
+        ->	SELECT * FROM cita c WHERE DATE(fecha_hora) = '2023-01-10';
    +----+---------------------+------------+-------------+
    | id | fecha_hora          | cliente_id | vehiculo_id |
    +----+---------------------+------------+-------------+
@@ -104,8 +104,8 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 6. **Generar una factura para un cliente específico en una fecha determinada**
 
    ```mysql
-   	-> SELECT * FROM factura f
-       -> WHERE f.cliente_id = 2 AND DATE(fecha) = '2023-02-17';
+        ->	SELECT * FROM factura f
+        -> WHERE f.cliente_id = 2 AND DATE(fecha) = '2023-02-17';
    +----+------------+------------+--------+
    | id | fecha      | cliente_id | total  |
    +----+------------+------------+--------+
@@ -118,16 +118,16 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 7. **Listar todas las órdenes de compra y sus detalles**
 
    ```mysql
-   	->	SELECT
-       ->  oc.id AS ID,
-       ->  oc.fecha AS FECHA,
-       ->     oc.empleado_id AS EMPLEADO,
-       ->     oc.proveedor_id AS PROOVEDOR,
-       ->     od.pieza_id AS PIEZA,
-       ->     od.cantidad AS CANT
-       -> FROM
-       ->  orden_compra oc
-       -> INNER JOIN orden_detalle od ON oc.id = od.orden_id;
+        ->	SELECT
+        ->  oc.id AS ID,
+        ->  oc.fecha AS FECHA,
+        ->     oc.empleado_id AS EMPLEADO,
+        ->     oc.proveedor_id AS PROOVEDOR,
+        ->     od.pieza_id AS PIEZA,
+        ->     od.cantidad AS CANT
+        -> FROM
+        ->  orden_compra oc
+        -> INNER JOIN orden_detalle od ON oc.id = od.orden_id;
    +----+------------+----------+-----------+-------+------+
    | ID | FECHA      | EMPLEADO | PROOVEDOR | PIEZA | CANT |
    +----+------------+----------+-----------+-------+------+
@@ -142,24 +142,24 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 8. **Obtener el costo total de piezas utilizadas en una reparación específica**
 
    ```mysql
-   	-> SELECT
-       ->     r.id AS ID_REPARACION,
-       ->  rp.pieza_id AS ID_PIEZA,
-       ->     pv.precio_venta AS PRECIO_UND,
-       ->     rp.cantidad AS CANT,
-       ->     SUM(pv.precio_venta * rp.cantidad) AS TOTAL
-       -> FROM
-       ->     reparacion r
-       -> INNER JOIN
-       ->     reparacion_piezas rp ON r.id = rp.reparacion_id
-       -> INNER JOIN
-       ->     pieza p ON rp.pieza_id = p.id
-       -> INNER JOIN
-       ->  precio pv ON p.id = pv.pieza_id
-       -> WHERE
-       ->     r.id = 3
-       -> GROUP BY
-       ->  r.id, rp.pieza_id, pv.precio_venta;
+        ->	SELECT
+        ->     r.id AS ID_REPARACION,
+        ->  rp.pieza_id AS ID_PIEZA,
+        ->     pv.precio_venta AS PRECIO_UND,
+        ->     rp.cantidad AS CANT,
+        ->     SUM(pv.precio_venta * rp.cantidad) AS TOTAL
+        -> FROM
+        ->     reparacion r
+        -> INNER JOIN
+        ->     reparacion_piezas rp ON r.id = rp.reparacion_id
+        -> INNER JOIN
+        ->     pieza p ON rp.pieza_id = p.id
+        -> INNER JOIN
+        ->  precio pv ON p.id = pv.pieza_id
+        -> WHERE
+        ->     r.id = 3
+        -> GROUP BY
+        ->  r.id, rp.pieza_id, pv.precio_venta;
    +---------------+----------+------------+------+-------+
    | ID_REPARACION | ID_PIEZA | PRECIO_UND | CANT | TOTAL |
    +---------------+----------+------------+------+-------+
@@ -172,15 +172,15 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 9. **Obtener el inventario de piezas que necesitan ser reabastecidas (cantidad menor que un umbral)**
 
   ```mysql
-  	-> SELECT
-      ->  p.nombre AS PIEZA,
-      ->  i.stock_actual AS CANTIDAD
-      -> FROM
-      ->  pieza p
-      -> INNER JOIN
-      ->  inventario i ON p.inventario_id = i.id
-      -> WHERE
-      ->  i.stock_actual <= 50;
+        ->  SELECT
+        ->  p.nombre AS PIEZA,
+        ->  i.stock_actual AS CANTIDAD
+        -> FROM
+        ->  pieza p
+        -> INNER JOIN
+        ->  inventario i ON p.inventario_id = i.id
+        -> WHERE
+        ->  i.stock_actual <= 50;
   +-------------------+----------+
   | PIEZA             | CANTIDAD |
   +-------------------+----------+
@@ -195,7 +195,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 10. **Obtener la lista de servicios más solicitados en un período específico**
 
     ```mysql
-    	-> SELECT
+        ->	SELECT
         ->  s.nombre AS SERVICIO,
         ->  COUNT(cs.servicio_id) AS CANTIDAD
         -> FROM servicio s
@@ -220,7 +220,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 11. **Obtener el costo total de reparaciones para cada cliente en un período específico**
 
     ```mysql
-    	-> SELECT
+        ->	SELECT
         ->  c.id AS ID_CLIENTE,
         ->  concat(c.nombre, ' ', c.apellido) AS CLIENTE,
         ->  SUM(costo_total) AS COSTO_TOTAL_EN_REPARACIONES
@@ -245,7 +245,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 12. **Listar los empleados con mayor cantidad de reparaciones realizadas en un período específico**
 
     ```mysql
-    	-> SELECT
+        ->	SELECT
         ->  e.id AS ID_EMPLEADO,
         ->  CONCAT(e.nombre, ' ', e.apellido) AS NOMBRE,
         ->  COUNT(r.id) AS CANTIDAD_REPARACIONES
@@ -443,18 +443,18 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    ```mysql
    	->SELECT
-       ->     c.id AS ID_CLIENTE,
-       ->     CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
-       ->     (SELECT SUM(r.costo_total)
-       ->      FROM reparacion r
-       ->      WHERE r.vehiculo_id = v.id
-       ->      AND r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
-       ->      GROUP BY r.vehiculo_id
-       ->      ORDER BY SUM(r.costo_total) DESC)
-       ->      AS COSTO_TOTAL_EN_REPARACIONES
-       -> FROM cliente c
-       -> INNER JOIN vehiculo v ON c.id = v.cliente_id
-       -> LIMIT 1;
+        ->     c.id AS ID_CLIENTE,
+        ->     CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
+        ->     (SELECT SUM(r.costo_total)
+        ->      FROM reparacion r
+        ->      WHERE r.vehiculo_id = v.id
+        ->      AND r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        ->      GROUP BY r.vehiculo_id
+        ->      ORDER BY SUM(r.costo_total) DESC)
+        ->      AS COSTO_TOTAL_EN_REPARACIONES
+        -> FROM cliente c
+        -> INNER JOIN vehiculo v ON c.id = v.cliente_id
+        -> LIMIT 1;
    +------------+-------------+-----------------------------+
    | ID_CLIENTE | CLIENTE     | COSTO_TOTAL_EN_REPARACIONES |
    +------------+-------------+-----------------------------+
@@ -468,20 +468,20 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 
    ```mysql
    	-> SELECT
-       ->  p.id AS PIEZA_ID,
-       ->     p.nombre AS PIEZA,
-       ->     COUNT(rp.pieza_id) AS VECES_USADA
-       -> FROM
-       ->  pieza p
-       -> INNER JOIN
-       ->  reparacion_piezas rp ON p.id = rp.pieza_id
-       -> INNER JOIN
-       ->  reparacion r ON rp.reparacion_id = r.id
-       -> WHERE
-       ->  r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
-       -> GROUP BY
-       ->  p.id
-       -> LIMIT 1;
+        ->  p.id AS PIEZA_ID,
+        ->     p.nombre AS PIEZA,
+        ->     COUNT(rp.pieza_id) AS VECES_USADA
+        -> FROM
+        ->  pieza p
+        -> INNER JOIN
+        ->  reparacion_piezas rp ON p.id = rp.pieza_id
+        -> INNER JOIN
+        ->  reparacion r ON rp.reparacion_id = r.id
+        -> WHERE
+        ->  r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+        -> GROUP BY
+        ->  p.id
+        -> LIMIT 1;
    +----------+------------------+-------------+
    | PIEZA_ID | PIEZA            | VECES_USADA |
    +----------+------------------+-------------+
@@ -494,15 +494,15 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 3. **Obtener los proveedores que suministran las piezas más caras**
 
    ```mysql
-   	-> SELECT
-       ->  p.id AS ID,
-       ->  p.nombre AS NOMBRE
-       -> FROM proveedor p
-       -> INNER JOIN
-       ->  precio pr ON p.id = pr.proveedor_id
-       -> WHERE pr.precio_proveedor = (
-       ->  SELECT MAX(precio_proveedor) FROM precio
-       -> );
+   	    -> SELECT
+        ->  p.id AS ID,
+        ->  p.nombre AS NOMBRE
+        -> FROM proveedor p
+        -> INNER JOIN
+        ->  precio pr ON p.id = pr.proveedor_id
+        -> WHERE pr.precio_proveedor = (
+        ->  SELECT MAX(precio_proveedor) FROM precio
+        -> );
    +----+------------+
    | ID | NOMBRE     |
    +----+------------+
@@ -515,14 +515,14 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 4. **Listar las reparaciones que no utilizaron piezas específicas durante el último año**
 
   ```mysql
-  	-> SELECT * FROM reparacion r
-      -> WHERE
-      ->  r.fecha >= date_sub(curdate(), INTERVAL 1 YEAR)
-      -> AND r.id NOT IN (
-      ->  SELECT rp.reparacion_id
-      ->     FROM reparacion_piezas rp
-      ->     WHERE rp.pieza_id IN (1, 3)
-      ->     );
+  	    -> SELECT * FROM reparacion r
+        -> WHERE
+        ->  r.fecha >= date_sub(curdate(), INTERVAL 1 YEAR)
+        -> AND r.id NOT IN (
+        ->  SELECT rp.reparacion_id
+        ->     FROM reparacion_piezas rp
+        ->     WHERE rp.pieza_id IN (1, 3)
+        ->     );
   +----+------------+-------------+-------------+----------+-------------+-------------------+
   | id | fecha      | empleado_id | vehiculo_id | duracion | costo_total | descripcion       |
   +----+------------+-------------+-------------+----------+-------------+-------------------+
@@ -535,19 +535,19 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 5. **Obtener las piezas que están en inventario por debajo del 10% del stock inicial**
 
    ```mysql
-   	-> SELECT
-       ->  p.id AS ID,
-       ->     p.nombre AS NOMBRE,
-       ->     i.stock_actual AS STOCK_ACTUAL,
-       ->     i.stock_inicial AS STOCK_INICIAL
-       -> FROM pieza p
-       -> INNER JOIN
-       ->  inventario i ON p.inventario_id = i.id
-       -> WHERE i.stock_actual <= (
-       ->  SELECT stock_inicial*0.1
-       ->     FROM inventario
-       ->     WHERE id = p.inventario_id
-       -> );
+   	    -> SELECT
+        ->  p.id AS ID,
+        ->     p.nombre AS NOMBRE,
+        ->     i.stock_actual AS STOCK_ACTUAL,
+        ->     i.stock_inicial AS STOCK_INICIAL
+        -> FROM pieza p
+        -> INNER JOIN
+        ->  inventario i ON p.inventario_id = i.id
+        -> WHERE i.stock_actual <= (
+        ->  SELECT stock_inicial*0.1
+        ->     FROM inventario
+        ->     WHERE id = p.inventario_id
+        -> );
    +----+-------------------+--------------+---------------+
    | ID | NOMBRE            | STOCK_ACTUAL | STOCK_INICIAL |
    +----+-------------------+--------------+---------------+
