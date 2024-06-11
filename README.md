@@ -444,3 +444,128 @@
 
     Se realiza una combinación entre las tablas de servicios, reparaciones y empleados para listar los servicios realizados por cada empleado. En este caso, cada empleado ha hecho solo 1 servicio dentro del período especificado.
 
+    
+
+**SUB CONSULTAS**
+
+
+
+1. **Obtener el cliente que ha gastado más en reparaciones durante el último año.**
+
+   ```mysql
+   SELECT
+       ->     c.id AS ID_CLIENTE,
+       ->     CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
+       ->     (SELECT SUM(r.costo_total)
+       ->      FROM reparacion r
+       ->      WHERE r.vehiculo_id = v.id
+       ->      AND r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+       ->      GROUP BY r.vehiculo_id
+       ->      ORDER BY SUM(r.costo_total) DESC)
+       ->      AS COSTO_TOTAL_EN_REPARACIONES
+       -> FROM cliente c
+       -> INNER JOIN vehiculo v ON c.id = v.cliente_id
+       -> LIMIT 1;
+   +------------+-------------+-----------------------------+
+   | ID_CLIENTE | CLIENTE     | COSTO_TOTAL_EN_REPARACIONES |
+   +------------+-------------+-----------------------------+
+   |          1 | Juan Pérez  |                      220.00 |
+   +------------+-------------+-----------------------------+
+   ```
+
+   Se suma el costo total de todas las reparaciones de cada cliente en el intervalo de 1 año, se ordenan de mayor a menor y se limita la consulta a 1 resultado, para que muestre solo el cliente que mas ha gastado.
+   
+2. **Obtener la pieza más utilizada en reparaciones durante el último mes**
+
+   ```mysql
+   	-> SELECT
+       ->  p.id AS PIEZA_ID,
+       ->     p.nombre AS PIEZA,
+       ->     COUNT(rp.pieza_id) AS VECES_USADA
+       -> FROM
+       ->  pieza p
+       -> INNER JOIN
+       ->  reparacion_piezas rp ON p.id = rp.pieza_id
+       -> INNER JOIN
+       ->  reparacion r ON rp.reparacion_id = r.id
+       -> WHERE
+       ->  r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+       -> GROUP BY
+       ->  p.id
+       -> LIMIT 1;
+   +----------+------------------+-------------+
+   | PIEZA_ID | PIEZA            | VECES_USADA |
+   +----------+------------------+-------------+
+   |        1 | Filtro de aceite |           1 |
+   +----------+------------------+-------------+
+   ```
+
+   Se cuenta el numero de veces que se ha utilizado cada pieza en el intervalo de 1 mes y se limita la consulta a 1 resultado, para que muestre solo la pieza mas utilizada.
+   
+3. **Obtener los proveedores que suministran las piezas más caras**
+
+   ```mysql
+   	-> SELECT
+       ->  p.id AS ID,
+       ->  p.nombre AS NOMBRE
+       -> FROM proveedor p
+       -> INNER JOIN
+       ->  precio pr ON p.id = pr.proveedor_id
+       -> WHERE pr.precio_proveedor = (
+       ->  SELECT MAX(precio_proveedor) FROM precio
+       -> );
+   +----+------------+
+   | ID | NOMBRE     |
+   +----+------------+
+   |  1 | Proveedor1 |
+   +----+------------+
+   ```
+
+   Se utiliza la función `MAX` para retornar el precio mas alto, y se relaciona con el proveedor, para saber cual es el proveedor con piezas mas caras
+   
+
+4. **Listar las reparaciones que no utilizaron piezas específicas durante el último año**
+
+  ```mysql
+  	-> SELECT * FROM reparacion r
+      -> WHERE
+      ->  r.fecha >= date_sub(curdate(), INTERVAL 1 YEAR)
+      -> AND r.id NOT IN (
+      ->  SELECT rp.reparacion_id
+      ->     FROM reparacion_piezas rp
+      ->     WHERE rp.pieza_id IN (1, 3)
+      ->     );
+  +----+------------+-------------+-------------+----------+-------------+-------------------+
+  | id | fecha      | empleado_id | vehiculo_id | duracion | costo_total | descripcion       |
+  +----+------------+-------------+-------------+----------+-------------+-------------------+
+  |  5 | 2024-05-21 |           2 |           2 |        2 |      100.00 | Cambio de bujías  |
+  +----+------------+-------------+-------------+----------+-------------+-------------------+
+  ```
+
+  Se seleccionan todas las reparaciones que no incluyen la pieza con id 1 y 3, en el intervalo de 1 año.
+  
+5. **Obtener las piezas que están en inventario por debajo del 10% del stock inicial**
+
+   ```mysql
+   	-> SELECT
+       ->  p.id AS ID,
+       ->     p.nombre AS NOMBRE,
+       ->     i.stock_actual AS STOCK_ACTUAL,
+       ->     i.stock_inicial AS STOCK_INICIAL
+       -> FROM pieza p
+       -> INNER JOIN
+       ->  inventario i ON p.inventario_id = i.id
+       -> WHERE i.stock_actual <= (
+       ->  SELECT stock_inicial*0.1
+       ->     FROM inventario
+       ->     WHERE id = p.inventario_id
+       -> );
+   +----+-------------------+--------------+---------------+
+   | ID | NOMBRE            | STOCK_ACTUAL | STOCK_INICIAL |
+   +----+-------------------+--------------+---------------+
+   |  2 | Bujía             |           48 |           500 |
+   |  3 | Pastilla de freno |           32 |           500 |
+   +----+-------------------+--------------+---------------+
+   ```
+
+   Se hace la operación para retornar el 10% del stock inicial designado, y se seleccionan las piezas que tienen stock actual menor o igual.
