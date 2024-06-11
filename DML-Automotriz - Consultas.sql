@@ -31,8 +31,8 @@ INNER JOIN
 #4. Obtener la cantidad de piezas en inventario para cada pieza
 
 SELECT 
-	p.nombre AS Pieza,
-    i.cantidad AS Cantidad
+	p.nombre AS PIEZA,
+    i.stock_actual AS CANTIDAD
 FROM 
 	pieza p
 INNER JOIN 
@@ -86,14 +86,14 @@ GROUP BY
 #  menor que un umbral)
 
 SELECT 
-	p.nombre AS Pieza,
-    i.cantidad AS Cantidad
+	p.nombre AS PIEZA,
+    i.stock_actual AS CANTIDAD
 FROM 
 	pieza p
 INNER JOIN 
 	inventario i ON p.inventario_id = i.id
 WHERE
-	i.cantidad <= 50;
+	i.stock_actual <= 50;
     
 #10. Obtener la lista de servicios más solicitados en un período específico
 
@@ -235,16 +235,78 @@ ORDER BY EMPLEADO DESC;
 
 # 1. Obtener el cliente que ha gastado más en reparaciones durante el último año.
 
+SELECT 
+    c.id AS ID_CLIENTE,
+    CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
+    SUM(r.costo_total) AS COSTO_TOTAL_EN_REPARACIONES
+FROM reparacion r
+INNER JOIN 
+    vehiculo v ON r.vehiculo_id = v.id
+INNER JOIN
+    cliente c ON v.cliente_id = c.id
+WHERE r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+GROUP BY c.id, c.nombre, c.apellido
+ORDER BY COSTO_TOTAL_EN_REPARACIONES DESC
+LIMIT 1;
 
+#2. Obtener la pieza más utilizada en reparaciones durante el último mes
 
+SELECT
+	p.id AS PIEZA_ID,
+    p.nombre AS PIEZA,
+    COUNT(rp.pieza_id) AS VECES_USADA
+FROM
+	pieza p
+INNER JOIN
+	reparacion_piezas rp ON p.id = rp.pieza_id
+INNER JOIN
+	reparacion r ON rp.reparacion_id = r.id
+WHERE
+	r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+GROUP BY
+	p.id
+LIMIT 1;
 
+#3. Obtener los proveedores que suministran las piezas más caras
 
+SELECT 
+	p.id AS ID,
+	p.nombre AS NOMBRE
+FROM proveedor p
+INNER JOIN
+	precio pr ON p.id = pr.proveedor_id
+WHERE pr.precio_proveedor = (
+	SELECT MAX(precio_proveedor) FROM precio
+);
 
+#4. Listar las reparaciones que no utilizaron piezas específicas durante
+#   el último año
 
+SELECT * FROM reparacion r
+WHERE
+	r.fecha >= date_sub(curdate(), INTERVAL 1 YEAR)
+AND r.id NOT IN (
+	SELECT rp.reparacion_id
+    FROM reparacion_piezas rp
+    WHERE rp.pieza_id IN (1, 3)
+    );
+    
+#5. Obtener las piezas que están en inventario 
+#   por debajo del 10% del stock inicial
 
-
-
-
+SELECT
+	p.id AS ID,
+    p.nombre AS NOMBRE,
+    i.stock_actual AS STOCK_ACTUAL,
+    i.stock_inicial AS STOCK_INICIAL
+FROM pieza p
+INNER JOIN
+	inventario i ON p.inventario_id = i.id
+WHERE i.stock_actual <= (
+	SELECT stock_inicial*0.1
+    FROM inventario
+    WHERE id = p.inventario_id
+);
 
 
 

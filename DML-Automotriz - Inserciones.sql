@@ -34,7 +34,10 @@ INSERT INTO marca (nombre) VALUES
 INSERT INTO servicio (nombre, descripcion, costo) VALUES 
 ('Cambio de aceite', 'Cambio de aceite del motor', 30.00), 
 ('Alineación', 'Alineación de ruedas', 50.00), 
-('Revisión de frenos', 'Inspección y ajuste de frenos', 40.00);
+('Revisión de frenos', 'Inspección y ajuste de frenos', 40.00),
+('Cambio de frenos', 'Cambio de frenos de disco', 50.00),  -- Nuevo servicio
+('Cambio de filtro de aceite', 'Cambio de filtro de aceite para motor', 20.00),  -- Nuevo servicio
+('Cambio de bujía', 'Cambio de bujías de encendido', 10.00);  -- Nuevo servicio
 
 INSERT INTO cargo (puesto) VALUES 
 ('Mecánico'), 
@@ -51,10 +54,10 @@ INSERT INTO ubicacion (nombre , direccion) VALUES
 ('Sucursal Norte', 'Calle 75 Carretera NORTE'), 
 ('Sucursal Sur', 'Calle 23 Carrera 12 Sur');
 
-INSERT INTO inventario (cantidad, ubicacion_id) VALUES 
-(100, 1), 
-(50, 2), 
-(200, 3);
+INSERT INTO inventario (stock_actual, stock_inicial, ubicacion_id) VALUES 
+(175, 500, 1), 
+(48, 500, 2), 
+(32, 500, 3);
 
 INSERT INTO pieza (nombre, descripcion, inventario_id) VALUES 
 ('Filtro de aceite', 'Filtro de aceite para motor', 1), 
@@ -89,12 +92,17 @@ INSERT INTO telefono_empleado (empleado_id, tipo_id, numero) VALUES
 INSERT INTO reparacion (fecha, empleado_id, vehiculo_id, duracion, costo_total, descripcion) VALUES 
 ('2023-01-15', 1, 1, 3, 200.00, 'Revisión general'), 
 ('2023-02-20', 2, 2, 4,300.00, 'Cambio de frenos'), 
-('2023-03-10', 3, 3, 2,150.00, 'Cambio de aceite');
+('2023-03-10', 3, 3, 2,150.00, 'Cambio de aceite'),
+('2024-05-20', 1, 1, 3, 220.00, 'Cambio de filtro de aceite'), 
+('2024-05-21', 2, 2, 2, 100.00, 'Cambio de bujías');
 
 INSERT INTO reparacion_servicio (reparacion_id, servicio_id) VALUES 
 (1, 1), 
 (2, 2), 
-(3, 3);
+(3, 3),
+(4, 5), 
+(5, 6);
+
 
 INSERT INTO proveedor (nombre, contacto_id, email) VALUES 
 ('Proveedor1', 1, 'proveedor1@example.com'), 
@@ -114,17 +122,25 @@ INSERT INTO precio (proveedor_id, pieza_id, precio_venta, precio_proveedor) VALU
 INSERT INTO reparacion_piezas (reparacion_id, pieza_id, cantidad) VALUES 
 (1, 1, 1), 
 (2, 2, 2), 
-(3, 3, 3);
+(3, 3, 3),
+(4, 1, 1),
+(5, 2, 4);
 
 INSERT INTO cita (fecha_hora, cliente_id, vehiculo_id) VALUES 
 ('2023-01-10 10:00:00', 1, 1), 
 ('2023-02-15 11:00:00', 2, 2), 
-('2023-03-20 12:00:00', 3, 3);
+('2023-03-20 12:00:00', 3, 3),
+('2024-05-20 10:00:00', 1, 1),
+('2024-05-21 11:00:00', 2, 2);
+
 
 INSERT INTO cita_servicio (cita_id, servicio_id) VALUES 
 (1, 1), 
 (2, 2), 
-(3, 3);
+(3, 3),
+(4, 5),
+(5, 6);
+
 
 INSERT INTO orden_compra (fecha, proveedor_id, empleado_id, total) VALUES 
 ('2023-01-01', 1, 1, 500.00), 
@@ -140,17 +156,23 @@ INSERT INTO orden_detalle (orden_id, pieza_id, cantidad) VALUES
 INSERT INTO factura (fecha, cliente_id, total) VALUES 
 ('2023-01-16', 1, 200.00), 
 ('2023-02-17', 2, 300.00), 
-('2023-03-18', 3, 400.00);
+('2023-03-18', 3, 400.00),
+('2024-05-20', 1, 220.00),
+('2024-05-21', 2, 100.00);
 
 INSERT INTO pago (fecha, cliente_id, factura_id, total) VALUES 
 ('2023-01-17', 1, 1, 200.00), 
 ('2023-02-18', 2, 2, 300.00), 
-('2023-03-19', 3, 3, 400.00);
+('2023-03-19', 3, 3, 400.00),
+('2024-05-21', 1, 4, 220.00),
+('2024-05-22', 2, 5, 100.00);
 
 INSERT INTO detalle_factura (factura_id, reparacion_id, cantidad, precio_unitario) VALUES 
 (1, 1, 1, 200.00), 
 (2, 2, 1, 300.00), 
-(3, 3, 1, 400.00);
+(3, 3, 1, 400.00),
+(4, 4, 1, 220.00),
+(5, 5, 1, 100.00);
 
 
 

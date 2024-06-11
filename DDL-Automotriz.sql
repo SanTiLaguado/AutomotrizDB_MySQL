@@ -71,7 +71,8 @@ CREATE TABLE ubicacion (
 
 CREATE TABLE inventario (
     id INT AUTO_INCREMENT,
-    cantidad INT,
+    stock_actual INT,
+    stock_inicial INT,
     ubicacion_id INT,
     CONSTRAINT PK_Inventario_Id PRIMARY KEY (id),
     CONSTRAINT FK_Ubicacion_Inventario_Id FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(id)
