@@ -1,5 +1,7 @@
 # Proyecto MySQL - AutomotrizDB
 
+En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIENTOS ALMACENADOS** requeridos para el proyecto.
+
 **CONSULTAS**
 
 
@@ -245,6 +247,7 @@
     ```
 
     Se suman los costos totales de reparaciones asociadas a los vehículos de cada cliente dentro del período especificado. Esto proporciona el gasto total en reparaciones por cliente.
+    
 
 12. **Listar los empleados con mayor cantidad de reparaciones realizadas en un período específico**
 
@@ -569,3 +572,304 @@
    ```
 
    Se hace la operación para retornar el 10% del stock inicial designado, y se seleccionan las piezas que tienen stock actual menor o igual.
+
+
+**PROCEDIMIENTOS ALMACENADOS**
+
+
+
+1. **Crear un procedimiento almacenado para insertar una nueva reparación.**
+
+   ```mysql
+   DELIMITER //
+   
+   CREATE PROCEDURE insertar_reparacion (
+   	IN fecha DATE,
+       IN empleado_id INT,
+       IN vehiculo_id INT,
+       IN duracion INT,
+       IN costo_total DECIMAL(10, 2),
+       IN descripcion TEXT
+   )
+   BEGIN
+   INSERT INTO reparacion(fecha, empleado_id, vehiculo_id, duracion, costo_total, descripcion)
+   VALUES (NULL, empleado_id, vehiculo_id, duracion, costo_total, descripcion);
+   
+   END //
+   
+   DELIMITER ;
+   
+   CALL insertar_reparacion('2024-06-10', 2, 2, 4,300.00, 'Cambio de frenos');
+   ```
+
+   Este procedimiento toma como parámetro los datos de una nueva reparación y los ingresa en la tabla.
+   
+
+2. **Crear un procedimiento almacenado para actualizar el inventario de una pieza.**
+
+   ```mysql
+   DELIMITER //
+   
+   CREATE PROCEDURE actualizar_inventario_pieza (
+       IN pieza_id INT,
+       IN nueva_cantidad INT
+   )
+   BEGIN
+       UPDATE inventario
+       SET stock_actual = nueva_cantidad
+       WHERE id = (
+           SELECT inventario_id
+           FROM pieza
+           WHERE id = pieza_id
+       );
+   END //
+   
+   DELIMITER ;
+   
+   CALL actualizar_inventario_pieza(1, 165);
+   ```
+
+   Este procedimiento toma como parámetro el id de la pieza a actualizar, y la nueva cantidad, y actualiza el atributo `stock_actual` si el id es el mismo que el ingresado en `pieza_id`.
+
+   
+
+3. **Crear un procedimiento almacenado para eliminar una cita**
+
+   ```mysql
+   DELIMITER //
+   
+   CREATE PROCEDURE eliminar_cita (
+   	IN cita_id INT
+   )
+   BEGIN
+   	DELETE FROM cita WHERE id = cita_id;
+   END//
+   
+   DELIMITER ;
+   
+   CALL eliminar_cita(1);
+   ```
+
+   Este procedimiento elimina un registro completo de la tabla cita, tomando como parámetro el id de la cita a eliminar.
+
+   
+
+4. **Crear un procedimiento almacenado para generar una factura**
+
+   ```mysql
+   DELIMITER //
+   
+   CREATE PROCEDURE generar_factura (
+   	IN fecha DATE,
+       IN cliente_id INT,
+       IN total DECIMAL(10, 2)
+   )
+   BEGIN
+   	INSERT INTO factura (fecha, cliente_id, total)
+       VALUES (fecha, cliente_id, total);
+   END//
+   
+   DELIMITER ;
+   
+   CALL generar_factura('2024-05-10', 2, 400.00)
+   ```
+
+   Este procedimiento toma como parámetro los datos para generar una factura y los ingresa en la tabla.
+
+   
+
+5. **Crear un procedimiento almacenado para obtener el historial de reparaciones de un vehículo**
+
+  ```mysql
+  DELIMITER //
+  
+  CREATE PROCEDURE ver_historial_reparaciones (
+  	IN id_vehiculo INT
+  )
+  BEGIN
+  	SELECT 
+  		fecha AS FECHA,
+  		duracion AS DURACION,
+  		costo_total AS TOTAL,
+  		descripcion AS DESCRIPCION
+  	FROM reparacion
+      WHERE vehiculo_id = id_vehiculo;
+  END//
+  
+  DELIMITER ;
+  
+  CALL ver_historial_reparaciones(1)
+  +------------+----------+--------+----------------------------+
+  | FECHA      | DURACION | TOTAL  | DESCRIPCION                |
+  +------------+----------+--------+----------------------------+
+  | 2023-01-15 |        3 | 200.00 | Revisión general           |
+  | 2024-05-20 |        3 | 220.00 | Cambio de filtro de aceite |
+  +------------+----------+--------+----------------------------+
+  ```
+
+  Este procedimiento toma como parámetro un `vehiculo_id` para hacer la consulta y obtener el historial de reparaciones.
+
+  
+
+6. **Crear un procedimiento almacenado para calcular el costo total de reparaciones de un cliente en un período**
+
+  ```mysql
+  DELIMITER //
+  
+  CREATE PROCEDURE costo_repar_cliente (
+  	IN id_cliente INT
+  )
+  BEGIN
+  	SELECT
+  		CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
+  		SUM(costo_total) AS TOTAL
+  	FROM reparacion r
+      INNER JOIN
+  		vehiculo v ON r.vehiculo_id = v.id
+  	INNER JOIN
+  		cliente c ON v.cliente_id = c.id
+  	WHERE c.id = id_cliente 
+      AND fecha BETWEEN '2023-01-01' AND '2023-03-31'
+      GROUP BY c.id;
+  END//
+  
+  DELIMITER ;
+  
+  CALL costo_repar_cliente(1);
+  +-------------+--------+
+  | CLIENTE     | TOTAL  |
+  +-------------+--------+
+  | Juan Pérez  | 200.00 |
+  +-------------+--------+
+  ```
+
+  Este procedimiento toma como parámetro un `id_cliente` y hace la consulta para sumar `costo_total` de todos los registros de reparaciones que tenga en el periodo de tiempo.
+  
+
+7. **Crear un procedimiento almacenado para obtener la lista de vehículos que requieren mantenimiento basado en el kilometraje.**
+
+  ```
+  DELIMITER //
+  
+  CREATE PROCEDURE vehic_mant_kms ()
+  BEGIN
+  	SELECT
+      v.id AS ID,
+      v.modelo AS MODELO,
+      v.año_fabricacion AS AÑO,
+      v.kilometraje AS KMS,
+      (v.kilometraje / (YEAR(CURDATE()) - v.año_fabricacion)) AS KMS_POR_AÑO
+  	FROM vehiculo v
+  	WHERE 
+  		(v.kilometraje / (YEAR(CURDATE()) - v.año_fabricacion)) > 10000;
+  END//
+  
+  DELIMITER ;
+  
+  CALL vehic_mant_kms();
+  +----+---------+------+-------+--------------+
+  | ID | MODELO  | AÑO  | KMS   | KMS_POR_AÑO  |
+  +----+---------+------+-------+--------------+
+  |  1 | Corolla | 2020 | 40241 |   10060.2500 |
+  |  2 | Civic   | 2019 | 68432 |   13686.4000 |
+  |  3 | Focus   | 2018 | 98340 |   16390.0000 |
+  +----+---------+------+-------+--------------+
+  ```
+
+  Este procedimiento muestra los vehículos que necesitan mantenimiento basado en su `año_fabricacion`  y si tienen mas de 10.000 km recorridos por año.
+
+  
+
+8. **Crear un procedimiento almacenado para insertar una nueva orden de compra**
+
+   ```
+   DELIMITER //
+   
+   CREATE PROCEDURE insertar_ordencompra (
+   	IN fecha DATE,
+       IN proveedor_id INT,
+       IN empleado_id INT,
+       IN total DECIMAL(10,2)
+   )
+   BEGIN
+   	INSERT INTO orden_compra (fecha, proveedor_id, empleado_id, total)
+       VALUES (fecha, proveedor_id, empleado_id, total);
+   END//
+   
+   DELIMITER ;
+   
+   CALL insertar_ordencompra('2024-06-10', 1, 1, 500.00);
+   ```
+
+   Este procedimiento toma como parámetro los datos para insertar una nueva orden de compra.
+   
+
+9. **Crear un procedimiento almacenado para actualizar los datos de un cliente**
+
+   ```
+   DELIMITER //
+   
+   CREATE PROCEDURE actualizar_cliente (
+   	IN id_cliente INT,
+   	IN nuevonombre VARCHAR(50),
+       IN nuevoapellido VARCHAR(50),
+       IN nuevoemail VARCHAR(255)
+   )
+   BEGIN
+   	UPDATE cliente
+       SET nombre = nuevonombre,
+   		apellido = nuevoapellido,
+   		email = nuevoemail
+       WHERE id = id_cliente;
+   END//
+   
+   DELIMITER ;
+   
+   CALL actualizar_cliente(1, 'Juanito', 'Pérea', 'juanito.perea@example.com')
+   ```
+
+   Este procedimiento toma como parámetro el `id_cliente` a actualizar, y los nuevos datos.
+   
+
+10. **Crear un procedimiento almacenado para obtener los servicios más solicitados en un período**
+
+    ```mysql
+    CREATE PROCEDURE ver_topservicios (
+    	IN fecha1 DATE,
+        IN fecha2 DATE
+    )
+    BEGIN
+    	SELECT 
+    		s.nombre AS SERVICIO,
+    		COUNT(cs.servicio_id) AS CANTIDAD
+    	FROM servicio s
+    	INNER JOIN
+    		cita_servicio cs ON s.id = cs.servicio_id
+    	INNER JOIN
+    		cita c ON cs.cita_id = c.id
+    	WHERE c.fecha_hora BETWEEN fecha1 AND fecha2
+    	GROUP BY s.nombre
+    	ORDER BY CANTIDAD DESC;
+    END//
+    
+    DELIMITER ;
+    
+    
+    CALL ver_topservicios('2023-01-01', '2023-03-31');
+    +---------------------+----------+
+    | SERVICIO            | CANTIDAD |
+    +---------------------+----------+
+    | Alineación          |        2 |
+    | Cambio de aceite    |        1 |
+    | Revisión de frenos  |        1 |
+    +---------------------+----------+
+    ```
+
+    Este procedimiento recibe como parámetros las fechas (`fecha1`  y `fecha2`) del período en el cual se desea consultar los servicios más solicitados.
+
+
+
+***Este proyecto fue desarrollado por `Santiago Laguado Osorio` - Campuslands 2024***
+
+
+
