@@ -5,7 +5,12 @@ USE automotriz;
 
 #1. Obtener el historial de reparaciones de un vehículo específico
 
-SELECT * FROM reparacion WHERE vehiculo_id = 1;
+SELECT 
+	fecha AS FECHA,
+    duracion AS DURACION,
+    costo_total AS TOTAL,
+    descripcion AS DESCRIPCION
+ FROM reparacion WHERE vehiculo_id = 1;
 
 #2. Calcular el costo total de todas las reparaciones realizadas por un empleado
 #    específico en un período de tiempo
@@ -155,7 +160,9 @@ INNER JOIN
     pieza p ON rp.pieza_id = p.id
 WHERE r.fecha BETWEEN '2023-01-01' AND '2023-03-31'
 GROUP BY
-	r.id, rp.pieza_id;
+	r.id, rp.pieza_id
+ORDER BY
+	VECES_USADA DESC;
 
 #14. Calcular el promedio de costo de reparaciones por vehículo
 
@@ -172,8 +179,8 @@ GROUP BY v.modelo;
 
 SELECT 
 	pvd.nombre AS PROVEEDOR,
-	p.nombre AS Pieza,
-    i.cantidad AS Cantidad
+	p.nombre AS PIEZA,
+    i.stock_actual AS CANTIDAD
 FROM 
 	pieza p
 INNER JOIN 
@@ -196,7 +203,9 @@ WHERE c.id NOT IN (
 
 #17. Obtener las ganancias totales del taller en un período específico
 
-SELECT SUM(total) AS TOTAL_GANANCIAS FROM pago;
+SELECT SUM(total) AS TOTAL_GANANCIAS 
+FROM pago
+WHERE fecha BETWEEN '2023-01-01' AND '2023-03-31';
 
 #18. Listar los empleados y el total de horas trabajadas en reparaciones en un
 #     período específico (asumiendo que se registra la duración de cada reparación)
