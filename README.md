@@ -9,7 +9,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 1. **Obtener el historial de reparaciones de un vehículo específico**
 
    ```mysql
-   		SELECT
+   	->	SELECT
        ->     fecha AS FECHA,
        ->     duracion AS DURACION,
        ->     costo_total AS TOTAL,
@@ -29,7 +29,7 @@ En este readme se encuentran las **CONSULTAS**, **SUBCONSULTAS** y **PROCEDIMIEN
 2. **Calcular el costo total de todas las reparaciones realizadas por un empleado específico en un período de tiempo**
 
   ```mysql
-  	   SELECT
+  	-> SELECT
       ->    empleado_id AS EMPLEADO,
       ->    SUM(costo_total) AS COSTO_TOTAL_DE_REPARACIONES
       -> FROM reparacion
