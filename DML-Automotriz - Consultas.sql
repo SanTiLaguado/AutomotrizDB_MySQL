@@ -247,16 +247,16 @@ ORDER BY EMPLEADO DESC;
 SELECT 
     c.id AS ID_CLIENTE,
     CONCAT(c.nombre, ' ', c.apellido) AS CLIENTE,
-    SUM(r.costo_total) AS COSTO_TOTAL_EN_REPARACIONES
-FROM reparacion r
-INNER JOIN 
-    vehiculo v ON r.vehiculo_id = v.id
-INNER JOIN
-    cliente c ON v.cliente_id = c.id
-WHERE r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
-GROUP BY c.id, c.nombre, c.apellido
-ORDER BY COSTO_TOTAL_EN_REPARACIONES DESC
+    (SELECT SUM(r.costo_total)
+     FROM reparacion r
+     WHERE r.vehiculo_id = v.id
+     AND r.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)) 
+     AS COSTO_TOTAL_EN_REPARACIONES
+FROM cliente c
+INNER JOIN vehiculo v ON c.id = v.cliente_id
 LIMIT 1;
+
+
 
 #2. Obtener la pieza más utilizada en reparaciones durante el último mes
 
